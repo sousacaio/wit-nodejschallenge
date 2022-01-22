@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/sousacaio/wit-nodejschallenge/issues"
   },
-  "homepage": "https://github.com/sousacaio/wit-nodejschallenge#readme"
+  "homepage": "https://github.com/sousacaio/wit-nodejschallenge#readme",
+  "dependencies": {
+    "express": "npm:undefined@^"
+  }
 }
