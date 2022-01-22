@@ -4,7 +4,8 @@
   "description": "Technical challenge made for wit-nodejs-challenge",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "start:dev":"nodemon src/index.ts"
   },
   "repository": {
     "type": "git",
@@ -26,6 +27,7 @@
   "devDependencies": {
     "@types/express": "^4.17.13",
     "@types/node": "^17.0.10",
+    "nodemon": "^2.0.15",
     "ts-node": "8.10.2",
     "typescript": "3.9.5"
   }
