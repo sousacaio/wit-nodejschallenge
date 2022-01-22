@@ -21,6 +21,10 @@
   },
   "homepage": "https://github.com/sousacaio/wit-nodejschallenge#readme",
   "dependencies": {
-    "express": "npm:undefined@^"
+    "express": "^4.17.2"
+  },
+  "devDependencies": {
+    "ts-node": "8.10.2",
+    "typescript": "3.9.5"
   }
 }
