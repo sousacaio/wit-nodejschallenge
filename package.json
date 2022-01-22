@@ -1,0 +1,23 @@
+{
+  "name": "wit-nodejs-challenge",
+  "version": "1.0.0",
+  "description": "Technical challenge made for wit-nodejs-challenge",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sousacaio/wit-nodejschallenge"
+  },
+  "keywords": [
+    "wit",
+    "nodejs"
+  ],
+  "author": "Caio Frias",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sousacaio/wit-nodejschallenge/issues"
+  },
+  "homepage": "https://github.com/sousacaio/wit-nodejschallenge#readme"
+}
