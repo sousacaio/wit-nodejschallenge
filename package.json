@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "test",
-    "start:dev":"nodemon src/index.ts"
+    "start:dev":"nodemon src/index.ts",
+    "start:prod":"node build/src/index.js",
+    "build": "tsc --project ./"
   },
   "repository": {
     "type": "git",
