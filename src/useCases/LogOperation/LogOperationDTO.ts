@@ -1,10 +1,10 @@
 import { IParams } from "../../entities/Params/IParams";
 
-export interface ISumUseCase {
+export interface ILogOperationUseCase {
     execute(): void
 }
     
-export interface ISumController  {
+export interface ILogOperationController  {
     handle(params:IParams): void
 }
     

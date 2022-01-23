@@ -25,6 +25,9 @@ export class B {
         if (isNaN(b)) {
             return false
         }
+        if (!b) {
+            return false
+        }
         return true;
     }
 }
