@@ -1,2 +1,4 @@
 node_modules
 build
+logfile.csv
+package-lock.json
