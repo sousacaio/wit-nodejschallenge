@@ -4,7 +4,7 @@
   "description": "Technical challenge made for wit-nodejs-challenge",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --watch",
     "start:dev": "nodemon src/index.ts",
     "start:prod": "node build/src/index.js",
     "build": "tsc --project ./"
