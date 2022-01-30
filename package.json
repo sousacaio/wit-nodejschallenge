@@ -24,9 +24,11 @@
   },
   "homepage": "https://github.com/sousacaio/wit-nodejschallenge#readme",
   "dependencies": {
+    "@types/mongoose": "^5.11.97",
     "cors": "^2.8.5",
     "express": "^4.17.2",
     "express-winston": "^4.2.0",
+    "mongoose": "^6.1.8",
     "winston": "^3.4.0",
     "winston-csv-format": "^2.0.2"
   },
