@@ -1,11 +1,12 @@
 import express, { NextFunction, Request, Response } from 'express';
 import { connect } from 'mongoose';
-import { endTime } from './adapters/endTime';
-import { myLogger } from './adapters/logger';
+import { endTime } from './Adapters/endTime';
+import { myLogger } from './Adapters/logger';
 import { IParams } from './entities/Params/IParams';
 import { Params } from './entities/Params/Params';
 import cors from 'cors'
 import { makeSumController } from './useCases/Sum';
+import { ok } from '../src/Helpers/HttpHelpers';
 
 const app = express();
 const PORT = 8000;
@@ -33,7 +34,7 @@ app.get('/', (req: RequestCustom, res) => {
   res.send('Tchau')
 })
 
-app.post('/sum', (req: RequestCustom, res: Response) => {
+app.post('/sum', async (req: RequestCustom, res: Response) => {
   try {
     let { a, b } = req.body
 
@@ -50,8 +51,6 @@ app.post('/sum', (req: RequestCustom, res: Response) => {
       return res.status(400).send(paramsOrError.value)
     }
 
-    //salvar os dados no banco
-
     const info = {
       clientIp: req.ip,
       orderId: 1,
@@ -59,15 +58,15 @@ app.post('/sum', (req: RequestCustom, res: Response) => {
       statusCode: 200
     };
 
-    const result = makeSumController().handle(parameters)
-    
+    const result = await makeSumController().handle(parameters)
+
     req.logger.log('info', info)
-    res.json({
-      result,
-      message: 'Operation success'
-    })
+
+    return res.json(ok(result))
+
   } catch (error) {
     console.log(error)
+    res.status(500)
   }
 });
 

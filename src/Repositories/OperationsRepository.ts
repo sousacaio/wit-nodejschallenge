@@ -1,4 +1,4 @@
-import { IOperations } from "../Models/Operations";
+import { ICreateOperation, IOperations } from "../Models/Operations";
 import { OperationInterface } from "../Services/Interfaces/Operation";
 
 export class OperationsRepository {
@@ -8,7 +8,7 @@ export class OperationsRepository {
         this.operationService = operationService
     }
 
-    async saveOperation(data: IOperations) {
+    async saveOperation(data: ICreateOperation) {
         return await this.operationService.save(data)
     }
 }
