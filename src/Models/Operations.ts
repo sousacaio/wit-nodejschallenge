@@ -13,6 +13,12 @@ export interface IOperations extends Document {
     result: number
 }
 
+export interface ICreateOperation {
+    parameters: Parameters;
+    operationType: string,
+    result: number
+}
+
 const OperationsSchema: Schema = new Schema({
     parameters: {
         firstArgument: Number,
