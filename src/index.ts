@@ -7,10 +7,13 @@ import { Params } from './entities/Params/Params';
 import cors from 'cors'
 import { makeSumController } from './useCases/Sum';
 import { ok } from '../src/Helpers/HttpHelpers';
+import { makeSettingsController } from './useCases/Settings';
+import { makeCheckLogFileController } from './useCases/CheckLogFile';
+import { makeCleanUpLogFileController } from './useCases/CleanUpLogFile';
 
 const app = express();
 const PORT = 8000;
-
+makeCleanUpLogFileController().handle()
 export interface RequestCustom extends Request {
   logger: typeof myLogger;
   startAt: any;
@@ -29,11 +32,6 @@ app.use(async (_req: RequestCustom, _res: Response, next: NextFunction) => {
   next()
 })
 
-app.get('/', (req: RequestCustom, res) => {
-  console.log(req.endTime(req.startAt))
-  res.send('Tchau')
-})
-
 app.post('/sum', async (req: RequestCustom, res: Response) => {
   try {
     let { a, b } = req.body
@@ -50,20 +48,44 @@ app.post('/sum', async (req: RequestCustom, res: Response) => {
     if (paramsOrError.isLeft()) {
       return res.status(400).send(paramsOrError.value)
     }
+    const result = await makeSumController().handle(parameters)
 
     const info = {
       clientIp: req.ip,
-      orderId: 1,
+      orderId: result._id,
       executionTime: req.endTime(req.startAt),
       statusCode: 200
     };
-
-    const result = await makeSumController().handle(parameters)
 
     req.logger.log('info', info)
 
     return res.json(ok(result))
 
+  } catch (error) {
+    console.log(error)
+    res.status(500)
+  }
+});
+
+app.post('/settings', async (req: RequestCustom, res: Response) => {
+  try {
+    let { logStatus } = req.body
+    makeSettingsController().handle(logStatus)
+    return res.json(ok({ message: 'Settings updated' }))
+  } catch (error) {
+    console.log(error)
+    res.status(500)
+  }
+});
+
+app.get('/settings/download', async (_req: RequestCustom, res: Response) => {
+  try {
+    if (makeCheckLogFileController().handle()) {
+      return res.download('logfile.csv')
+    }
+    return res
+      .status(404)
+      .json({ message: 'Log file does not exists yet' })
   } catch (error) {
     console.log(error)
     res.status(500)
