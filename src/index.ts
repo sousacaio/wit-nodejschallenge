@@ -1,10 +1,12 @@
 import express, { NextFunction, Request, Response } from 'express';
+import { connect } from 'mongoose';
 import { endTime } from './adapters/endTime';
 import { myLogger } from './adapters/logger';
 import { IParams } from './entities/Params/IParams';
 import { Params } from './entities/Params/Params';
 import cors from 'cors'
 import { makeSumController } from './useCases/Sum';
+
 const app = express();
 const PORT = 8000;
 
@@ -19,6 +21,10 @@ app.use((req: RequestCustom, _res: Response, next: NextFunction) => {
   req.logger = myLogger
   req.startAt = process.hrtime()
   req.endTime = endTime
+  next()
+})
+app.use(async (_req: RequestCustom, _res: Response, next: NextFunction) => {
+  await connect('mongodb://localhost:27017/mongo_calculator');
   next()
 })
 
@@ -54,7 +60,7 @@ app.post('/sum', (req: RequestCustom, res: Response) => {
     };
 
     const result = makeSumController().handle(parameters)
-
+    
     req.logger.log('info', info)
     res.json({
       result,
