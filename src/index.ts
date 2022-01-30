@@ -5,12 +5,13 @@ import { myLogger } from './Adapters/logger';
 import { IParams } from './entities/Params/IParams';
 import { Params } from './entities/Params/Params';
 import cors from 'cors'
-import { makeSumController } from './useCases/Sum';
 import { ok } from '../src/Helpers/HttpHelpers';
+
 import { makeSettingsController } from './useCases/Settings';
 import { makeCheckLogFileController } from './useCases/CheckLogFile';
 import { makeCleanUpLogFileController } from './useCases/CleanUpLogFile';
 import { makeGetSettingsController } from './useCases/GetSettings';
+import { makeCalculateController } from './useCases/Calculate';
 
 const app = express();
 const PORT = 8000;
@@ -32,10 +33,11 @@ app.use(async (_req: RequestCustom, _res: Response, next: NextFunction) => {
   next()
 })
 
-app.post('/sum', async (req: RequestCustom, res: Response) => {
+app.post('/calculate/:operationType', async (req: RequestCustom, res: Response) => {
   try {
     let { a, b } = req.body
     let settingsId = req.headers?._id as unknown as ObjectId
+    let operationType = req.params.operationType as string
 
     let parameters: IParams = {
       a: parseInt(a),
@@ -49,7 +51,8 @@ app.post('/sum', async (req: RequestCustom, res: Response) => {
     if (paramsOrError.isLeft()) {
       return res.status(400).send(paramsOrError.value)
     }
-    const result = await makeSumController().handle(parameters)
+
+    const result = await makeCalculateController().handle(parameters, operationType)
 
     const info = {
       clientIp: req.ip,
