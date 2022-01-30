@@ -10,7 +10,7 @@ export class SumController implements ISumController {
         private sumUseCase: SumUseCase
     ) {}
     
-    handle(params:IParams): void {
-        this.sumUseCase.execute(params)
+    handle(params:IParams): any {
+        return this.sumUseCase.execute(params)
     }
 }
