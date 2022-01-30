@@ -4,6 +4,7 @@ import { myLogger } from './adapters/logger';
 import { IParams } from './entities/Params/IParams';
 import { Params } from './entities/Params/Params';
 import cors from 'cors'
+import { makeSumController } from './useCases/Sum';
 const app = express();
 const PORT = 8000;
 
@@ -28,22 +29,21 @@ app.get('/', (req: RequestCustom, res) => {
 
 app.post('/sum', (req: RequestCustom, res: Response) => {
   try {
-    console.log(req.body)
     let { a, b } = req.body
-    
+
     let parameters: IParams = {
       a: parseInt(a),
       b: parseInt(b),
       clientIp: req.ip,
       date: Date.now()
     }
-    
+
     const paramsOrError = Params.create(parameters)
-    
-    if (paramsOrError.isLeft()) {    
+
+    if (paramsOrError.isLeft()) {
       return res.status(400).send(paramsOrError.value)
     }
-    
+
     //salvar os dados no banco
 
     const info = {
@@ -53,8 +53,13 @@ app.post('/sum', (req: RequestCustom, res: Response) => {
       statusCode: 200
     };
 
-    req.logger.log('info', info)    
-    res.json('nice')
+    const result = makeSumController().handle(parameters)
+
+    req.logger.log('info', info)
+    res.json({
+      result,
+      message: 'Operation success'
+    })
   } catch (error) {
     console.log(error)
   }
