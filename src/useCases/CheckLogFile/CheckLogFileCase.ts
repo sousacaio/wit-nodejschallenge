@@ -1,8 +1,11 @@
+import { existsSync } from "fs";
+
 export class CheckLogFileUseCase {
     constructor(
     ) { }
 
     execute(): boolean {
-        return true
+        const exists = existsSync('logfile.csv')
+        return exists
     }
 }
