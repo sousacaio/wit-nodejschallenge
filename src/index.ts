@@ -1,5 +1,5 @@
 import express, { NextFunction, Request, Response } from 'express';
-import { connect } from 'mongoose';
+import { connect, ObjectId } from 'mongoose';
 import { endTime } from './Adapters/endTime';
 import { myLogger } from './Adapters/logger';
 import { IParams } from './entities/Params/IParams';
@@ -10,10 +10,10 @@ import { ok } from '../src/Helpers/HttpHelpers';
 import { makeSettingsController } from './useCases/Settings';
 import { makeCheckLogFileController } from './useCases/CheckLogFile';
 import { makeCleanUpLogFileController } from './useCases/CleanUpLogFile';
+import { makeGetSettingsController } from './useCases/GetSettings';
 
 const app = express();
 const PORT = 8000;
-makeCleanUpLogFileController().handle()
 export interface RequestCustom extends Request {
   logger: typeof myLogger;
   startAt: any;
@@ -56,8 +56,9 @@ app.post('/sum', async (req: RequestCustom, res: Response) => {
       executionTime: req.endTime(req.startAt),
       statusCode: 200
     };
-
+    makeGetSettingsController().handle()
     req.logger.log('info', info)
+
 
     return res.json(ok(result))
 
@@ -70,8 +71,9 @@ app.post('/sum', async (req: RequestCustom, res: Response) => {
 app.post('/settings', async (req: RequestCustom, res: Response) => {
   try {
     let { logStatus } = req.body
-    makeSettingsController().handle(logStatus)
-    return res.json(ok({ message: 'Settings updated' }))
+    let _id = req.body?._id as ObjectId
+    const settings = await makeSettingsController().handle({ logStatus, _id })
+    return res.json(ok(settings))
   } catch (error) {
     console.log(error)
     res.status(500)
@@ -81,8 +83,10 @@ app.post('/settings', async (req: RequestCustom, res: Response) => {
 app.get('/settings/download', async (_req: RequestCustom, res: Response) => {
   try {
     if (makeCheckLogFileController().handle()) {
+      await makeCleanUpLogFileController().handle()
       return res.download('logfile.csv')
     }
+
     return res
       .status(404)
       .json({ message: 'Log file does not exists yet' })

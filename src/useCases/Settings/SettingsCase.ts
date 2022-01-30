@@ -1,13 +1,14 @@
-import { writeFile } from "fs";
+import { ICreateSettings, ISettings } from "../../Models/Settings";
+import { SettingsRepository } from "../../Repositories/SettingsRepository";
 
 export class SettingsUseCase {
-    constructor(
-    ) { }
 
-    execute(logStatus: boolean): void {
-        const settings = JSON.stringify({ logStatus })
-        writeFile("settings.json", settings, (err: any) => {
-            if (err) console.log('error', err);
-        })
+    constructor(private settingsRepository: SettingsRepository) {
+        this.settingsRepository = settingsRepository
+    }
+
+    async execute(settings: ICreateSettings): Promise<ISettings | null> {        
+        const result = await this.settingsRepository.createUpdate(settings)
+        return result
     }
 }

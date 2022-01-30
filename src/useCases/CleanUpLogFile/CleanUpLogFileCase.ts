@@ -1,6 +1,6 @@
-import { writeFileSync, readFile } from 'fs'
+import { writeFileSync, readFile, readFileSync } from 'fs'
 export class CleanUpLogFileUseCase {
-    execute(): void {
+    async execute(): Promise<void> {
         readFile('logfile.csv', 'utf8', (err, data) => {
             if (err) {
                 console.log(err)

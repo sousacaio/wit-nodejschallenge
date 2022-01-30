@@ -1,5 +1,6 @@
 import { ISettingsController } from "./SettingsDTO";
 import { SettingsUseCase } from "./SettingsCase";
+import { ICreateSettings, ISettings } from "../../Models/Settings";
 
 /** 
 * The class to exists methods
@@ -9,7 +10,8 @@ export class SettingsController implements ISettingsController {
         private settingsUseCase: SettingsUseCase
     ) { }
 
-    handle(logstatus: boolean): void {
-        this.settingsUseCase.execute(logstatus)
+    async handle(settings: ICreateSettings): Promise<ISettings | null> {        
+        const result = await this.settingsUseCase.execute(settings)
+        return result
     }
 }

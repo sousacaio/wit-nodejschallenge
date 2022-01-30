@@ -7,9 +7,9 @@ import { CleanUpLogFileUseCase } from "./CleanUpLogFileCase";
 export class CleanUpLogFileController implements ICleanUpLogFileController {
     constructor(
         private cleanUpLogFileUseCase: CleanUpLogFileUseCase
-    ) {}
-    
-    handle(): void {
-        this.cleanUpLogFileUseCase.execute()
+    ) { }
+
+    async handle(): Promise<void> {
+        await this.cleanUpLogFileUseCase.execute()
     }
 }
