@@ -1,4 +1,5 @@
-import { readFile } from "fs";
+import { ObjectId } from "mongoose";
+import { ISettings } from "../../Models/Settings";
 import { SettingsRepository } from "../../Repositories/SettingsRepository";
 
 export class GetSettingsUseCase {
@@ -6,9 +7,7 @@ export class GetSettingsUseCase {
         this.settingsRepository = settingsRepository
     }
 
-    async execute(): Promise<boolean> {
-        const settings = await this.settingsRepository.getSettings()
-        if (settings.length > 0) settings[0].logStatus
-        return true
+    async execute(_id: ObjectId): Promise<ISettings | null> {
+        return await this.settingsRepository.getSettings(_id)
     }
 }

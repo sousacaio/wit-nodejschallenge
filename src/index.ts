@@ -35,6 +35,7 @@ app.use(async (_req: RequestCustom, _res: Response, next: NextFunction) => {
 app.post('/sum', async (req: RequestCustom, res: Response) => {
   try {
     let { a, b } = req.body
+    let settingsId = req.headers?._id as unknown as ObjectId
 
     let parameters: IParams = {
       a: parseInt(a),
@@ -56,12 +57,11 @@ app.post('/sum', async (req: RequestCustom, res: Response) => {
       executionTime: req.endTime(req.startAt),
       statusCode: 200
     };
-    makeGetSettingsController().handle()
-    req.logger.log('info', info)
-
-
+    const settings = await makeGetSettingsController().handle(settingsId)
+    if (settings?.logStatus === true) {
+      req.logger.log('info', info)
+    }
     return res.json(ok(result))
-
   } catch (error) {
     console.log(error)
     res.status(500)
@@ -80,7 +80,18 @@ app.post('/settings', async (req: RequestCustom, res: Response) => {
   }
 });
 
-app.get('/settings/download', async (_req: RequestCustom, res: Response) => {
+app.get('/settings/:_id', async (req: RequestCustom, res: Response) => {
+  try {
+    let _id = req.params?._id as unknown as ObjectId
+    const settings = await makeGetSettingsController().handle(_id)
+    return res.json(ok(settings))
+  } catch (error) {
+    console.log(error)
+    res.status(500)
+  }
+});
+
+app.get('/settings/download/', async (_req: RequestCustom, res: Response) => {
   try {
     if (makeCheckLogFileController().handle()) {
       await makeCleanUpLogFileController().handle()

@@ -1,6 +1,7 @@
 import { IGetSettingsController } from "./GetSettingsDTO";
 import { GetSettingsUseCase } from "./GetSettingsCase";
-import { SettingsRepository } from "../../Repositories/SettingsRepository";
+import { ObjectId } from "mongoose";
+import { ISettings } from "../../Models/Settings";
 
 /** 
 * The class to exists methods
@@ -10,7 +11,7 @@ export class GetSettingsController implements IGetSettingsController {
         private getSettingsUseCase: GetSettingsUseCase,
     ) { }
 
-    handle(): Promise<boolean> {
-        return this.getSettingsUseCase.execute()
+    async handle(_id: ObjectId): Promise<ISettings | null> {
+        return await this.getSettingsUseCase.execute(_id)
     }
 }

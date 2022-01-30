@@ -1,3 +1,4 @@
+import { ObjectId } from "mongoose";
 import { ICreateSettings, ISettings } from "../Models/Settings";
 import { SettingsInterface } from "../Services/Interfaces/Settings";
 
@@ -11,7 +12,7 @@ export class SettingsRepository {
     async createUpdate(data: ICreateSettings) {
         return await this.settingsService.createOrUpdate(data)
     }
-    async getSettings(): Promise<ISettings[]> {
-        return await this.settingsService.findAll()
+    async getSettings(_id: ObjectId): Promise<ISettings | null> {
+        return await this.settingsService.findById(_id)
     }
 }
