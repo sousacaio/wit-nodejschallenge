@@ -12,6 +12,7 @@ import { makeCheckLogFileController } from './useCases/CheckLogFile';
 import { makeCleanUpLogFileController } from './useCases/CleanUpLogFile';
 import { makeGetSettingsController } from './useCases/GetSettings';
 import { makeCalculateController } from './useCases/Calculate';
+import { makeDashboardController } from './useCases/Dashboard';
 
 const app = express();
 const PORT = 8000;
@@ -84,7 +85,7 @@ app.post('/settings', async (req: RequestCustom, res: Response) => {
 });
 
 app.get('/settings/:_id', async (req: RequestCustom, res: Response) => {
-  try {
+  try {    
     let _id = req.params?._id as unknown as ObjectId
     const settings = await makeGetSettingsController().handle(_id)
     return res.json(ok(settings))
@@ -94,16 +95,29 @@ app.get('/settings/:_id', async (req: RequestCustom, res: Response) => {
   }
 });
 
-app.get('/settings/download/', async (_req: RequestCustom, res: Response) => {
+app.get('/prepare', async (req: RequestCustom, res: Response) => {
   try {
-    if (makeCheckLogFileController().handle()) {
-      await makeCleanUpLogFileController().handle()
-      return res.download('logfile.csv')
-    }
+    await makeCleanUpLogFileController().handle()
+    return res.json(ok({ message: 'File beign prepared' }))
+  } catch (error) {
+    console.log(error)
+    res.status(500)
+  }
+});
 
-    return res
-      .status(404)
-      .json({ message: 'Log file does not exists yet' })
+app.get('/download-settings', async (_req: RequestCustom, res: Response) => {
+  try {    
+    return res.download('logfile.csv')
+  } catch (error) {
+    console.log(error)
+    res.status(500)
+  }
+});
+
+app.get('/dashboard/', async (_req: RequestCustom, res: Response) => {
+  try {
+    const result = await makeDashboardController().handle()
+    res.json(ok(result))
   } catch (error) {
     console.log(error)
     res.status(500)

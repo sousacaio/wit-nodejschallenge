@@ -11,4 +11,7 @@ export class OperationsRepository {
     async saveOperation(data: ICreateOperation) {
         return await this.operationService.save(data)
     }
+    async findAll(): Promise<IOperations[]> {
+        return await this.operationService.findAll()
+    }
 }
